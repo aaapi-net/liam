@@ -11,7 +11,14 @@ func (ms *MailText) getMail() *LMail {
 }
 
 func (ms *MailText) getBodyBytes() ([]byte, error) {
-	return []byte(fmt.Sprintf("%+v", ms.mail.body)), nil
+	header, err := ms.mail.bodyHeader()
+	if err != nil {
+		return nil, err
+	}
+
+	body := []byte(fmt.Sprintf("%+v", ms.mail.body))
+
+	return append([]byte(header)[:], body[:]...), nil
 }
 
 func (ms *MailText) Send() (err error) {

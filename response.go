@@ -14,31 +14,28 @@ type response interface {
 	getBodyBytes() ([]byte, error)
 }
 
-func getResponse(r response)  error {
-	header, err := r.getMail().bodyHeader()
-	mail := r.getMail()
+func getResponse(r response) error {
 
+	body, err := r.getBodyBytes()
 	if err == nil {
-		body, err := r.getBodyBytes()
+		mail := r.getMail()
 		auth := smtp.PlainAuth("", mail.smtp.username, mail.smtp.password, mail.smtp.server)
 
-		log.Println("Header: ", header, string(body))
-
-		if err == nil {
-			if mail.smtp.liamog.tlsConfig == nil {
-				err = smtp.SendMail(mail.smtp.getAddr(), auth, mail.sender, mail.to, append([]byte(header)[:], body[:]...))
-			} else {
-				err = sendMailTLS(mail.smtp, auth, mail.sender, mail.to, append([]byte(header)[:], body[:]...))
-			}
-			if err != nil {
-				return err
-			}
-			log.Println("Mail sent successfully")
+		tlsConfig := mail.smtp.liamog.tlsConfig
+		if tlsConfig == nil {
+			err = smtp.SendMail(mail.smtp.getAddr(), auth, mail.sender, mail.to, body)
+		} else {
+			tlsConfig.ServerName = mail.smtp.server
+			err = sendMailTLS(mail.smtp, auth, mail.sender, mail.to, body)
 		}
+		if err != nil {
+			return err
+		}
+		log.Println("Mail sent successfully")
+
 	}
 	return err
 }
-
 
 func sendMailTLS(lsmtp *LSmtp, auth smtp.Auth, from string, to []string, msg []byte) error {
 
@@ -60,9 +57,7 @@ func sendMailTLS(lsmtp *LSmtp, auth smtp.Auth, from string, to []string, msg []b
 		return err
 	}
 	defer c.Close()
-	if err = c.Hello("localhost"); err != nil {
-		return err
-	}
+
 	if err = c.Auth(auth); err != nil {
 		return err
 	}

@@ -12,7 +12,7 @@ type Liam struct {
 
 // secure: false
 func New() *Liam {
-	return NewConfig(false)
+	return NewClient(nil)
 }
 
 func NewConfig(secure bool) *Liam {
@@ -20,11 +20,11 @@ func NewConfig(secure bool) *Liam {
 		InsecureSkipVerify: !secure,
 	}
 
-	return NewClient(tlsConfig)
+	return NewClient(&tlsConfig)
 }
 
-func NewClient(tlsConfig tls.Config) *Liam {
-	return &Liam{tlsConfig: &tlsConfig}
+func NewClient(tlsConfig *tls.Config) *Liam {
+	return &Liam{tlsConfig: tlsConfig}
 }
 // secure: false
 func Smtp(server string, port int) *LSmtp {

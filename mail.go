@@ -10,11 +10,11 @@ import (
 type LMail struct {
 	smtp *LSmtp
 
-	sender string
-	to []string
-	cc      []string		// TODO: BCC messages by including in the to parameter but not including it in the msg headers
+	sender  string
+	to      []string
+	cc      []string // TODO: BCC messages by including in the to parameter but not including it in the msg headers
 	subject string
-	body interface{}
+	body    interface{}
 }
 
 func (lm *LMail) Text(body interface{}) *MailText {
@@ -28,6 +28,7 @@ func (lm *LMail) Struct(body interface{}) *MailStruct {
 	lm.body = body
 	return &MailStruct{MailText{*lm}}
 }
+
 /*
 var body = map[string]interface{}{"Username": "Dave", "Type": "a new client"}
 
@@ -44,7 +45,7 @@ The name of a key of the data, which must be a map, preceded
   field names they do not need to start with an upper case letter.
   Keys can also be evaluated on variables, including chaining:
     $x.key1.key2
- */
+*/
 func (lm *LMail) Template(body map[string]interface{}, template string) *MailTemplate {
 	lm.body = body
 	return &MailTemplate{mail: *lm, template: template}
@@ -69,7 +70,6 @@ func (lm *LMail) SetTo(to []string) *LMail {
 	lm.to = to
 	return lm
 }
-
 
 func (lm *LMail) AddCopyTo(cc ...string) *LMail {
 	lm.cc = append(lm.cc, cc...)
@@ -104,18 +104,16 @@ func (lm *LMail) bodyHeader() (message string, err error) {
 	}
 
 	message += fmt.Sprintf("Subject: %s\r\n", lm.subject)
-	message += "\r\n\r\n" // + body
 
 	return
 }
-
 
 func isValidEmail(email string) bool {
 	_, err := mail.ParseAddress(email)
 	return err == nil
 }
 
-func isValidEmails(emails []string) bool  {
+func isValidEmails(emails []string) bool {
 	for _, email := range emails {
 		if !isValidEmail(email) {
 			return false
