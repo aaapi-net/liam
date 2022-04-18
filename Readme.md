@@ -1,3 +1,6 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/aaapi-net/liam)](https://goreportcard.com/report/github.com/aaapi-net/liam)
+[![GoDoc](https://godoc.org/github.com/aaapi-net/liam?status.svg)](http://godoc.org/github.com/aaapi-net/liam)
+
 **liam** is a *mail* library which provides a set of extensions on go's standard `net/smtp` library,
 
 so all interfaces are just a syntax sugar on the standard ones.

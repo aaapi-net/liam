@@ -6,7 +6,7 @@ import (
 )
 
 type Liam struct {
-	context context.Context
+	context   context.Context
 	tlsConfig *tls.Config
 }
 
@@ -16,7 +16,7 @@ func New() *Liam {
 }
 
 func NewConfig(secure bool) *Liam {
-	tlsConfig := tls.Config {
+	tlsConfig := tls.Config{
 		InsecureSkipVerify: !secure,
 	}
 
@@ -26,10 +26,12 @@ func NewConfig(secure bool) *Liam {
 func NewClient(tlsConfig *tls.Config) *Liam {
 	return &Liam{tlsConfig: tlsConfig}
 }
+
 // secure: false
 func Smtp(server string, port int) *LSmtp {
 	return New().Smtp(server, port)
 }
+
 // secure: false
 func (l *Liam) Smtp(server string, port int) *LSmtp {
 	return &LSmtp{
@@ -38,6 +40,7 @@ func (l *Liam) Smtp(server string, port int) *LSmtp {
 		port:   port,
 	}
 }
+
 // secure: false
 func Send(server string, port int, username, password, emailTo, title, message string) error {
 	return Smtp(server, port).

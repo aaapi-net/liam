@@ -6,13 +6,13 @@ type LSmtp struct {
 	liamog Liam
 
 	server string
-	port int
+	port   int
 
 	username string
 	password string
 }
 
-func (ls *LSmtp) Auth(username string, password string) *LMail  {
+func (ls *LSmtp) Auth(username string, password string) *LMail {
 	ls.username = username
 	ls.password = password
 	return &LMail{
@@ -20,6 +20,6 @@ func (ls *LSmtp) Auth(username string, password string) *LMail  {
 	}
 }
 
-func (ls *LSmtp) getAddr() string  {
-	return fmt.Sprintf("%s:%d",  ls.server, ls.port)
+func (ls *LSmtp) getAddr() string {
+	return fmt.Sprintf("%s:%d", ls.server, ls.port)
 }
